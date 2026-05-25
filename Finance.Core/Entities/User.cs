@@ -19,4 +19,6 @@ public class User
     public Role Role { get; set; }
      
     public WalletAccount WalletAccount { get; set; }
+
+    public bool IsDeleted { get; set; } = false;
 }

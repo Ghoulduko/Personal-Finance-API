@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Mapper\" />
-      <Folder Include="Services\" />
+        <ProjectReference Include="..\Finance.Core\Finance.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="16.1.1" />
-      <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.2.1"/>
+        <PackageReference Include="FluentValidation" Version="12.1.1"/>
+        <Using Include="BCrypt.Net.BCrypt" Alias="BC"/>
     </ItemGroup>
 
 </Project>

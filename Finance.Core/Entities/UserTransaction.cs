@@ -5,7 +5,7 @@ using Finance.Core.Enums;
 namespace Finance.Core.Entities;
 
 [Table("Transactions")]
-public class Transaction
+public class UserTransaction
 {
     [Key]
     public int Id { get; set; }
@@ -18,5 +18,5 @@ public class Transaction
     
     public decimal Amount { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public TransactionStatus Status { get; set; }
+    public string Status { get; set; }
 }
