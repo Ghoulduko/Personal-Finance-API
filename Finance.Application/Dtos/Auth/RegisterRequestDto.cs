@@ -1,6 +1,6 @@
-﻿namespace Finance.Application.Dtos.User;
+﻿namespace Finance.Application.Dtos.Auth;
 
-public class UserRegisterDto
+public class RegisterRequestDto
 {
     public string Username { get; set; }
     public string Email { get; set; }

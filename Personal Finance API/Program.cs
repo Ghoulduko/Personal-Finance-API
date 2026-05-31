@@ -1,6 +1,5 @@
 using System.Text;
 using Finance.Application.Interfaces;
-using Finance.Application.Security;
 using Finance.Application.Services.Authentication;
 using Finance.Application.Services.Notifications;
 using Finance.Application.Services.Roles;
@@ -52,9 +51,8 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 // Authentication Services
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
-builder.Services.AddScoped<ITokenHasher, TokenHasher>();
+builder.Services.AddScoped<IJwtAuthenticationService, JwtAuthenticationService>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 // Notification Services
 builder.Services.AddScoped<IEmailNotificationService, EmailNotificationService>();
@@ -64,12 +62,13 @@ builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserLoginValidator>();
 
 
-var jwtKey = builder.Configuration["JwtSecretKey"] ?? throw new JwtKeyNotFoundException("No JWT Secret Key was found");
+var jwtKey = builder.Configuration["JwtConfig:Key"] ?? throw new JwtKeyNotFoundException("No JWT Secret Key was found");
 
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddJwtBearer(options =>
     {

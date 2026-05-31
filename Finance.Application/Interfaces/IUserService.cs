@@ -4,8 +4,8 @@ namespace Finance.Application.Interfaces;
 
 public interface IUserService
 {
-    Task<string> Register(UserRegisterDto req);
-    Task<string> Login(UserLoginDto req);
+    // Task<string> Register(UserRegisterDto req);
+    // Task<string> Login(UserLoginDto req);
     Task<IEnumerable<UserDto>> GetAllUsers();
     Task<IEnumerable<UserDto>> GetAllDeletedUsers();
     Task<UserDto> GetUserById(int id);

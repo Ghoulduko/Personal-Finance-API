@@ -5,12 +5,11 @@ namespace Finance.Core.Entities;
 [Table("RefreshTokens")]
 public class RefreshToken
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string TokenHash { get; set; }
     public int UserId { get; set; }
-    public bool IsRevoked { get; set; }
-    public DateTime CreatedOnUtc { get; set; }
-    public DateTime ExpiresOnUtc { get; set; }
+    public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+    public DateTime ExpiresOn { get; set; }
 
     public User User { get; set; }
 }

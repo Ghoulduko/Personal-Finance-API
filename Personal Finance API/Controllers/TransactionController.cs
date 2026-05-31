@@ -30,7 +30,7 @@ public class TransactionController : Controller
     [Authorize]
     public async Task<Ok<IEnumerable<TransactionDto>>> GetAllTransactionsUser()
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("Id")?.Value;
         return TypedResults.Ok(await _transactionService.GetUserTransactions(int.Parse(userId)));
     }
 

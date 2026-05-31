@@ -18,7 +18,7 @@ public class WalletAccountController : Controller
     [HttpPost("Deposit/{amount:decimal}")]
     public async Task<Ok<string>> Deposit(decimal amount)
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("Id")?.Value;
         await _service.Deposit(amount, int.Parse(userId));
         return TypedResults.Ok($"Successfully deposited ${amount} to your account");
     }
@@ -26,7 +26,7 @@ public class WalletAccountController : Controller
     [HttpPost("Withdraw/{amount:decimal}")]
     public async Task<Ok<string>> Withdraw(decimal amount)
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("Id")?.Value;
         await _service.Withdraw(amount, int.Parse(userId));
         return TypedResults.Ok($"Successfully Withdrew ${amount} from your account.");
     }
@@ -34,7 +34,7 @@ public class WalletAccountController : Controller
     [HttpGet("CheckBalance")]
     public async Task<Ok<string>> CheckBalance()
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("Id")?.Value;
         decimal userBalance = await _service.CheckBalance(int.Parse(userId));
         return TypedResults.Ok($"Your account balance is ${userBalance}");
     }

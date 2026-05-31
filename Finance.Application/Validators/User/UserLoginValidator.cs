@@ -1,9 +1,10 @@
-﻿using Finance.Application.Dtos.User;
+﻿using Finance.Application.Dtos.Auth;
+using Finance.Application.Dtos.User;
 using FluentValidation;
 
 namespace Finance.Application.Validators.User;
 
-public class UserLoginValidator : AbstractValidator<UserLoginDto>
+public class UserLoginValidator : AbstractValidator<LoginRequestDto>
 {
     public UserLoginValidator()
     {
