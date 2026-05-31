@@ -6,6 +6,7 @@ using Finance.Core.Exceptions.TransactionExceptions;
 using Finance.Core.Exceptions.UserExcepTions;
 using Finance.Core.Exceptions.WalletAccountExceptions;
 using Finance.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Finance.Application.Services.Transactions;
 
@@ -14,15 +15,17 @@ public class TransactionService : ITransactionService
     private readonly ITransactionRepository _transactionRepository;
     private readonly IUserRepository _userRepository;
     private readonly IEmailNotificationService _emailNotificationService;
+    private readonly ILogger<TransactionService> _logger;
 
-    public TransactionService(ITransactionRepository transactionRepository, IUserRepository userRepository, IEmailNotificationService emailNotificationService)
+    public TransactionService(ITransactionRepository transactionRepository, IUserRepository userRepository, IEmailNotificationService emailNotificationService, ILogger<TransactionService> logger)
     {
         _transactionRepository = transactionRepository;
         _userRepository = userRepository;
         _emailNotificationService = emailNotificationService;
+        _logger = logger;
     }
 
-    private void ValidateTransaction(User sender, decimal amount, User receiver)
+    private void ValidateTransaction(User sender, decimal amount)
     {
         if (amount <= 0)
             throw new ArgumentException("Amount must be greater than zero.");
@@ -35,10 +38,10 @@ public class TransactionService : ITransactionService
         var sender = await _userRepository.GetUserByEmail(senderEmail);
         var receiver = await _userRepository.GetUserByEmail(req.ReceiverEmail);
         
-        if (sender == null || receiver == null || sender.IsDeleted || receiver.IsDeleted)
+        if (sender is null || receiver is null || sender.IsDeleted || receiver.IsDeleted)
             throw new UserNotFoundException("User not found, try logging in.");
         
-        ValidateTransaction(sender, req.Amount, receiver);
+        ValidateTransaction(sender, req.Amount);
         var senderBalanceBeforeTransaction = sender.WalletAccount.Balance;
         var receiverBalanceBeforeTransaction = receiver.WalletAccount.Balance;
         
@@ -76,12 +79,14 @@ public class TransactionService : ITransactionService
         await _emailNotificationService.SendMoneyTransferredEmail(senderEmail, sender.Username, receiver.Username, req.Amount);
         
         await _emailNotificationService.SendReceiveTransferredEmail(req.ReceiverEmail, receiver.Username, sender.Username, req.Amount);
+        
+        _logger.LogInformation("Money Transferred SenderWalletId: {SenderWalletId}, ReceiverWalletId: {ReceiverWalletId}", sender.WalletAccount.Id, receiver.WalletAccount.Id);
     }
 
     public async Task<IEnumerable<TransactionDto>> GetUserTransactions(int loggedInUserId)
     {
         var user = await _userRepository.GetUserById(loggedInUserId);
-        if (user == null)
+        if (user is null)
             throw new UserNotFoundException("User not found, try logging in.");
         var transactions = await _transactionRepository.GetUserTransactions(user.WalletAccount.Id);
         var transactionDtos = transactions.Select(t => new TransactionDto

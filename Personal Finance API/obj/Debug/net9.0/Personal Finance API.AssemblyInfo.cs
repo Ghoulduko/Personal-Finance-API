@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Personal Finance API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d94b5df1a2b67861f181cbb81d9e85ad279cd45")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a801dfc10efc247cb91e2e114074dccb24e93ba4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Personal Finance API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Personal Finance API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -58,7 +58,7 @@ public class JwtAuthenticationService : IJwtAuthenticationService
         }
         catch
         {
-            _logger.LogInformation("Sending email on user login failed.");
+            _logger.LogError("Sending email on user login failed.");
         }
         return await GenerateJwtToken(user);
     }
@@ -91,11 +91,13 @@ public class JwtAuthenticationService : IJwtAuthenticationService
         }
         catch
         {
-            _logger.LogInformation("Sending email on user register failed.");
+            _logger.LogError("Sending email on user register failed.");
         }
         
         var user = await _userRepository.GetUserByEmail(req.Email.ToLower().Trim());
         return await GenerateJwtToken(user);
+        
+        
     }
 
     public async Task<LoginResponseDto?> RotateRefreshToken(string token)

@@ -1,26 +1,24 @@
-﻿using Finance.Application.Dtos.Auth;
-using Finance.Application.Dtos.User;
+﻿using Finance.Application.Dtos.User;
 using Finance.Application.Interfaces;
-using Finance.Application.Services.Notifications;
-using Finance.Core.Entities;
 using Finance.Core.Exceptions.UserExcepTions;
 using Finance.Core.Interfaces;
-using FluentValidation;
+using Microsoft.Extensions.Logging;
 
 namespace Finance.Application.Services.Users;
 
 public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
-
     private readonly IEmailNotificationService _emailService;
+    private readonly ILogger<UserService> _logger;
 
     public UserService(IUserRepository repository,
-        IEmailNotificationService emailService)
+        IEmailNotificationService emailService,
+        ILogger<UserService> logger)
     {
         _repository = repository;
-
         _emailService = emailService;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<UserDto>> GetAllUsers()
@@ -54,7 +52,7 @@ public class UserService : IUserService
     public async Task<UserDto> GetUserById(int id)
     {
         var user = await _repository.GetUserById(id);
-        if (user == null)
+        if (user is null)
             throw new UserNotFoundException($"No user found with id {id}");
 
         return new UserDto()
@@ -70,7 +68,7 @@ public class UserService : IUserService
     public async Task<UserDto> GetUserByEmail(string email)
     {
         var user = await _repository.GetUserByEmail(email.Trim().ToLower());
-        if (user == null)
+        if (user is null)
             throw new UserNotFoundException($"No user found with id {email.Trim().ToLower()}");
 
         return new UserDto()
@@ -86,7 +84,7 @@ public class UserService : IUserService
     public async Task DeleteAccount(string password, int userId)
     {
         var user = await _repository.GetUserById(userId);
-        if (user == null)
+        if (user is null)
             throw new UserNotFoundException($"No user found with id {userId}");
 
         if (!BC.Verify(password, user.PasswordHash))
@@ -94,5 +92,16 @@ public class UserService : IUserService
 
         user.IsDeleted = true;
         await _repository.SaveAsync();
+        
+        _logger.LogInformation("Deleted Account: {UserId}", userId);
+        
+        try
+        {
+            await _emailService.SendAccountDeletedEmail(user.Email, user.Username);
+        }
+        catch
+        {
+            _logger.LogInformation("Failed to delete account: {UserId}", userId);
+        }
     }
 }

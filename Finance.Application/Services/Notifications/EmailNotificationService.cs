@@ -5,7 +5,7 @@ using Finance.Application.Interfaces;
 namespace Finance.Application.Services.Notifications;
 
 public class EmailNotificationService : IEmailNotificationService
-{   
+{
     public async Task SendRegisterEmail(string email, string username)
     {
         using var smtp = new SmtpClient("smtp.gmail.com", 587)
@@ -95,7 +95,7 @@ public class EmailNotificationService : IEmailNotificationService
                 </body>
                 </html>",
 
-        IsBodyHtml = true
+            IsBodyHtml = true
         };
 
         mailMessage.To.Add(email);
@@ -103,7 +103,7 @@ public class EmailNotificationService : IEmailNotificationService
         await smtp.SendMailAsync(mailMessage);
     }
 
-  
+
     public async Task SendLoginEmail(string email, string username)
     {
         using var smtp = new SmtpClient("smtp.gmail.com", 587)
@@ -365,7 +365,7 @@ public class EmailNotificationService : IEmailNotificationService
 
         await smtp.SendMailAsync(mailMessage);
     }
-    
+
     public async Task SendReceiveTransferredEmail(string email, string username, string senderUsername, decimal amount)
     {
         using var smtp = new SmtpClient("smtp.gmail.com", 587)
@@ -462,7 +462,7 @@ public class EmailNotificationService : IEmailNotificationService
 
         await smtp.SendMailAsync(mailMessage);
     }
-    
+
     public async Task SendMoneyTransferredEmail(string email, string username, string receiverUsername, decimal amount)
     {
         using var smtp = new SmtpClient("smtp.gmail.com", 587)
@@ -549,6 +549,92 @@ public class EmailNotificationService : IEmailNotificationService
             </td>
             </tr>
             </table>
+
+            </body>
+            </html>",
+            IsBodyHtml = true
+        };
+
+        mailMessage.To.Add(email);
+
+        await smtp.SendMailAsync(mailMessage);
+    }
+
+    public async Task SendAccountDeletedEmail(string email, string username)
+    {
+        using var smtp = new SmtpClient("smtp.gmail.com", 587)
+        {
+            Credentials = new NetworkCredential("gelab2109@gmail.com", "wulyylslqxdqgtvi"),
+            EnableSsl = true
+        };
+
+        using var mailMessage = new MailMessage
+        {
+            From = new MailAddress("[gelab2109@gmail.com](mailto:gelab2109@gmail.com)"),
+            Subject = "Account Deleted",
+            Body = $@"<!DOCTYPE html>
+            <html lang=""en"">
+            <head>
+                <meta charset=""UTF-8"" />
+                <title>Account Deleted</title>
+            </head>
+            <body style=""margin:0; padding:0; background:#f5f6fa; font-family:Arial, Helvetica, sans-serif;"">
+                <table role=""presentation"" width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""background:#f5f6fa; padding:24px 0;"">
+                    <tr>
+                        <td align=""center"">
+                            <table role=""presentation"" width=""600"" cellpadding=""0"" cellspacing=""0"" style=""width:600px; background:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.08);"">
+
+            ```
+                            <tr>
+                                <td style=""padding:22px 28px; background:#111827;"">
+                                    <div style=""color:#ffffff; font-size:18px; font-weight:700;"">
+                                        Account Deleted 🗑️
+                                    </div>
+                                    <div style=""color:#cbd5e1; font-size:13px; margin-top:6px;"">
+                                        Your account has been permanently removed
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style=""padding:28px;"">
+                                    <div style=""font-size:15px; color:#111827; line-height:1.6;"">
+                                        Hello, {username}!<br /><br />
+                                        This email confirms that your account has been successfully deleted.
+                                    </div>
+
+                                    <div style=""margin:18px 0 10px; text-align:center;"">
+                                        <div style=""display:inline-block; padding:14px 18px; border-radius:12px; background:#f3f4f6; border:1px solid #e5e7eb;"">
+                                            <span style=""font-size:16px; font-weight:700; color:#111827;"">
+                                                Deletion Time: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC<br/>
+                                                Account: {username}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div style=""font-size:13px; color:#6b7280; margin-top:12px;"">
+                                        All associated account data has been removed according to our deletion policy.
+                                    </div>
+
+                                    <hr style=""border:none; border-top:1px solid #e5e7eb; margin:22px 0;"" />
+
+                                    <div style=""font-size:12px; color:#9ca3af;"">
+                                        If you did not request this deletion, please contact support immediately.
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style=""padding:18px 28px; background:#f9fafb; font-size:12px; color:#9ca3af;"">
+                                    © Order Management • This is an automated message, please don't reply.
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            ```
 
             </body>
             </html>",
